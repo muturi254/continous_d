@@ -8,7 +8,7 @@
   apt:
     upgrade: yes
 
-- name: "remove dependancies that are ni longer required"
+- name: "remove dependancies that are no longer required"
   become: yes
   apt:
     autoremove: yes
