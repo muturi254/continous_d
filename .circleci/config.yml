@@ -34,5 +34,5 @@ jobs:
 workflows:
   continous_delivery:
     jobs:
-      - create_infrastructure
-      # - configure
+      # - create_infrastructure
+      - configure_infrustructure
