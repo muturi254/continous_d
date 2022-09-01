@@ -1,0 +1,10 @@
+---
+- name: Exersice to deploy Web server to EC2
+  hosts: all
+  user: ubuntu
+  become: true
+  become_method: sudo
+  become_user: root
+
+  roles:
+    - setUp
