@@ -1,6 +1,6 @@
 ---
 - name: Exersice to deploy Web server to EC2
-  hosts: 3.235.84.134
+  hosts: all
   user: ubuntu
   become: true
   become_method: sudo
