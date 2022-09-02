@@ -1,41 +1,42 @@
 version: 2.1
 
+commands:
+  destroy_environment:
+    steps:
+      - run:
+          name: Destroy Environment
+          when: on_fail
+          command: |
+            aws cloudformation delete-stack --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:7}
+
+
 jobs:
-  create_infrastructure:
+  create_infrastructure: 
     docker:
       - image: amazon/aws-cli
     steps:
       - checkout
       - run:
-          name: Create Cloudformation stack
+          name: Create Cloudformation Stacks
           command: |
             aws cloudformation deploy \
               --template-file template.yml \
-              --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
+              --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:7} \
               --region us-east-1
 
-  configure_infrastructure:
+  smoke_test:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: alpine:latest
     steps:
-      - checkout
-      - add_ssh_keys:
-          fingerprints: ["68:3f:17:cb:a9:0c:97:7e:e5:47:f9:f7:e0:b4:24:03"]
       - run:
-          name: Install Ansible
-          command: |
-            apk add --update ansible
-      - run:
-          name: Run playbook and configure server
-          command: |
-            export ANSIBLE_HOST_KEY_CHECKING=False
-            ansible-playbook -i inventory.txt main.yml
-
-
-
+          name: smoke test
+          command: return 1
+      - destroy_environment
+           
 workflows:
-  continous_delivery:
+  smoke_tests:
     jobs:
-      # - create_infrastructure
-      - configure_infrastructure
-
+      - create_infrastructure  
+      - smoke_test:
+          requires:
+            - create_infrastructure
