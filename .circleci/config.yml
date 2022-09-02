@@ -28,7 +28,7 @@ jobs:
       - run:
           name: Run playbook and configure server
           command: |
-            cp ansible.cfg ~/
+            export ANSIBLE_HOST_KEY_CHECKING=False
             ansible-playbook -i inventory.txt main.yml
 
 
@@ -36,6 +36,6 @@ jobs:
 workflows:
   continous_delivery:
     jobs:
-      # - create_infrastructure
-      - configure_infrastructure
+      - create_infrastructure
+      # - configure_infrastructure
 
